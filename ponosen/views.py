@@ -11,8 +11,11 @@ from django.utils.crypto import get_random_string
 # Create your views here.
 def saveEmail(request, email):
 	try:
-		PonosenEmail(email=email).save()
-		return JsonResponse({"saved":True})
+		if PonosenEmail.objects.filter(email=email):
+			return JsonResponse({"saved": False, "alert": "Uporabnik že obstaja"})
+		else:
+			PonosenEmail(email=email).save()
+			return JsonResponse({"saved":True})
 	except:
 		return JsonResponse({"saved": False})
 
