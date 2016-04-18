@@ -55,3 +55,6 @@ def recoverPassword(request, code):
 
 	else:
 		return render(request, 'ponosen/passwordRecovery.html', {"alert":"zahtevek ne obstaja"})
+
+def ping(request):
+	return JsonResponse({"response": "Smo tu"})
