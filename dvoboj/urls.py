@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^voteForOce/', voteForOce),
     url(r'^voteForSin/', voteForSin),
     url(r'^addVotesForOce/(?P<points>\d+)/', addVotesForOce),
-    url(r'^addVotesForOce/(?P<points>\d+)/', addVotesForOce),
+    url(r'^addVotesForSin/(?P<points>\d+)/', addVotesForSin),
 ]
