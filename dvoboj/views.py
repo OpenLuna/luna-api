@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .models import Points
+from .models import Points, Twitt
 # Create your views here.
 def getPoints(request):
 	obj = Points.objects.all()[0]
@@ -37,3 +37,7 @@ def addVotesForOce(request, points):
 	obj.oce += int(points)
 	obj.save()
 	return HttpResponse("Added")
+
+def getTweets(request, by=0):
+	print by
+	return JsonResponse([{"id":tweet.id, "url":tweet.url} for tweet in Twitt.objects.all().order_by("-id")[int(by):int(by)+10]], safe=False)

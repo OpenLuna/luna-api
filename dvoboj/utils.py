@@ -5,6 +5,7 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 from .models import Twitt
 import json
+from datetime import datetime
 
 consumer_key = settings.TWITTER_CONSUMER_KEY
 consumer_secret = settings.TWITTER_CONSUMER_SECRET
@@ -17,14 +18,27 @@ def get_tweeter_api():
 	api = tweepy.API(auth)
 	return api
 
-from tweepy import Stream
-from tweepy.streaming import StreamListener
  
 class MyListener(StreamListener):
  
     def on_data(self, data):
-    	parsed = json.loads(data)
-    	#Twitt(user=parsed["user"], url=data, content=data, timestamp=data,isVideo=data,isFoto=data, content_url=data)
+        print data
+    	data = json.loads(data)
+        isFoto = False
+        isVideo = False
+        media_url = None
+        print data["id_str"]
+        print data["entities"]
+        url = "https://twitter.com/"+data["user"]["screen_name"]+"/status/"+data["id_str"]
+        if "media" in data["entities"].keys():
+            if data["extended_entities"]["media"][0]["type"] in ["photo", "animated_gif"]:
+                isFoto=True
+                media_url = data["extended_entities"]["media"][0]["media_url_https"]
+            elif data["extended_entities"]["media"][0]["type"]=="video":
+                isVideo=True
+                media_url = data["extended_entities"]["media"][0]["video_info"]["variants"][0]["url"]
+
+    	Twitt(user=data["user"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"),isVideo=isVideo,isFoto=isFoto, content_url=media_url).save()
         print data
         return True
  
@@ -33,6 +47,11 @@ class MyListener(StreamListener):
         return True
 
 def setTwitterListener():
-	twitter_stream = Stream(auth, MyListener(), timeout=60)
-	twitter_stream.filter(track=['#dvoboj'])
-	return twitter_stream
+    while True:
+        try:
+            twitter_stream = Stream(auth, MyListener(), timeout=60)
+            twitter_stream.filter(track=['#dvoboj'])
+        except Exception, e:
+            print "Error. Restarting Stream.... Error: "
+            print e.__doc__
+            print e.message
