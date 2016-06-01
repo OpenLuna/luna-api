@@ -38,7 +38,7 @@ class MyListener(StreamListener):
                 isVideo=True
                 media_url = data["extended_entities"]["media"][0]["video_info"]["variants"][0]["url"]
 
-    	Twitt(user=data["user"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"),isVideo=isVideo,isFoto=isFoto, content_url=media_url).save()
+        Twitt(user=data["user"]["screen_name"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"),isVideo=isVideo,isFoto=isFoto, content_url=media_url).save()
         print data
         return True
  
