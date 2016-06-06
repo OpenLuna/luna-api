@@ -3,7 +3,7 @@ from tweepy import OAuthHandler
 from django.conf import settings
 from tweepy import Stream
 from tweepy.streaming import StreamListener
-from .models import Twitt
+from .models import Twitt, Twitt_media
 import json
 from datetime import datetime
 
@@ -30,6 +30,9 @@ class MyListener(StreamListener):
         print data["id_str"]
         print data["entities"]
         url = "https://twitter.com/"+data["user"]["screen_name"]+"/status/"+data["id_str"]
+        tweet = Twitt(user=data["user"]["screen_name"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"))
+        tweet.save()
+
         if "media" in data["entities"].keys():
             if data["extended_entities"]["media"][0]["type"] in ["photo", "animated_gif"]:
                 isFoto=True
@@ -37,8 +40,10 @@ class MyListener(StreamListener):
             elif data["extended_entities"]["media"][0]["type"]=="video":
                 isVideo=True
                 media_url = data["extended_entities"]["media"][0]["video_info"]["variants"][0]["url"]
-
-        Twitt(user=data["user"]["screen_name"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"),isVideo=isVideo,isFoto=isFoto, content_url=media_url).save()
+            media=Twitt_media(isFoto=isFoto, isVideo=isVideo, content_url=media_url)
+            media.save()
+            tweet.media_data.add(media)
+        
         print data
         return True
  

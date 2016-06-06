@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .models import Points, Twitt
+from .models import Points, Twitt, Twitt_media
 import json
 # Create your views here.
 def getPoints(request):
@@ -41,4 +41,12 @@ def addVotesForOce(request, points):
 
 def getTweets(request, by=0):
 	print by
-	return JsonResponse([{"id":tweet.id, "url":tweet.url, "user":tweet.user} for tweet in Twitt.objects.all().order_by("-id")[int(by):int(by)+10]], safe=False)
+	count = Twitt.objects.all().count()
+	return JsonResponse({"tweets":[{"id":tweet.id, 
+									"url":tweet.url, 
+									"user":tweet.user,
+									"user_profile":"https://twitter.com/"+tweet.user,
+									"text":tweet.content,
+									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.all()],} for tweet in Twitt.objects.all().order_by("-id")[int(by):int(by)+10]],
+						 "tweets_count": count,
+						})

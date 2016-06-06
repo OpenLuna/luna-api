@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^addVotesForOce/(?P<points>\d+)/', addVotesForOce),
     url(r'^addVotesForSin/(?P<points>\d+)/', addVotesForSin),
     url(r'^getTweets/(?P<by>\d+)/', getTweets),
-    url(r'^getTweets/', getTweets),
+    url(r'^getTweets/$', getTweets),
 ]
