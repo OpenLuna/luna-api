@@ -47,6 +47,6 @@ def getTweets(request, by=0):
 									"user":tweet.user,
 									"user_profile":"https://twitter.com/"+tweet.user,
 									"text":tweet.content,
-									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.all()],} for tweet in Twitt.objects.all().order_by("-id")[int(by):int(by)+10]],
+									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.all()],} for tweet in reversed(Twitt.objects.all().order_by("id")[int(by):int(by)+10])],
 						 "tweets_count": count,
 						})
