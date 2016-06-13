@@ -42,7 +42,8 @@ def addVotesForOce(request, points):
 def getTweets(request, by=0):
 	print by
 	count = Twitt.objects.all().count()
-	return JsonResponse({"tweets":[{"id":tweet.id, 
+	return JsonResponse({"tweets":[{"id":tweet.id,
+									"twitt_id":tweet.twitt_id,
 									"url":tweet.url, 
 									"user":tweet.user,
 									"time":tweet.timestamp.isoformat(),

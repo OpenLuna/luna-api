@@ -27,10 +27,8 @@ class MyListener(StreamListener):
         isFoto = False
         isVideo = False
         media_url = None
-        print data["id_str"]
-        print data["entities"]
         url = "https://twitter.com/"+data["user"]["screen_name"]+"/status/"+data["id_str"]
-        tweet = Twitt(user=data["user"]["screen_name"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"))
+        tweet = Twitt(user=data["user"]["screen_name"], twitt_id=data["id_str"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"))
         tweet.save()
 
         if "media" in data["entities"].keys():

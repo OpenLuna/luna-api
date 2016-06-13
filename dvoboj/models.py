@@ -24,6 +24,7 @@ class Twitt_media(models.Model):
 
 class Twitt(models.Model):
 	user = models.CharField(max_length=1024)
+	twitt_id = models.CharField(max_length=64, null=True, blank=True)
 	url = models.URLField(null=True, blank=True)
 	content = models.CharField(max_length=256, null=True, blank=True)
 	timestamp = models.DateTimeField()
