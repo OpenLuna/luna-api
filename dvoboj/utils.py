@@ -5,7 +5,8 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 from .models import Twitt, Twitt_media
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.db import connection
 
 consumer_key = settings.TWITTER_CONSUMER_KEY
 consumer_secret = settings.TWITTER_CONSUMER_SECRET
@@ -22,13 +23,15 @@ def get_tweeter_api():
 class MyListener(StreamListener):
  
     def on_data(self, data):
+	connection.close()
         print data
     	data = json.loads(data)
         isFoto = False
         isVideo = False
         media_url = None
         url = "https://twitter.com/"+data["user"]["screen_name"]+"/status/"+data["id_str"]
-        tweet = Twitt(user=data["user"]["screen_name"], twitt_id=data["id_str"], url=url, content=data["text"], timestamp=datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y"))
+        time = datetime.strptime(data["created_at"],"%a %b %d %H:%M:%S +0000 %Y") + timedelta(hours=2)
+        tweet = Twitt(user=data["user"]["screen_name"], twitt_id=data["id_str"], url=url, content=data["text"], timestamp=time)
         tweet.save()
 
         if "media" in data["entities"].keys():
