@@ -21,6 +21,9 @@ class Twitt_media(models.Model):
 		else:
 			return "unkown"
 
+	def __str__(self):
+		return self.content_url
+
 
 class Twitt(models.Model):
 	user = models.CharField(max_length=1024)
@@ -29,3 +32,6 @@ class Twitt(models.Model):
 	content = models.CharField(max_length=256, null=True, blank=True)
 	timestamp = models.DateTimeField()
 	media_data = models.ManyToManyField(Twitt_media, blank=True)
+
+	def __str__(self):
+		return self.user
