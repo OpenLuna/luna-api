@@ -7,6 +7,7 @@ from .models import Twitt, Twitt_media
 import json
 from datetime import datetime, timedelta
 from django.db import connection
+import requests
 
 consumer_key = settings.TWITTER_CONSUMER_KEY
 consumer_secret = settings.TWITTER_CONSUMER_SECRET
@@ -61,3 +62,9 @@ def setTwitterListener():
             print "Error. Restarting Stream.... Error: "
             print e.__doc__
             print e.message
+
+
+def removeRemovedTwitts():
+    for twitt in Twitt.objects.all():
+        if requests.get(twitt.url).status_code == 404:
+            twitt.delete()
