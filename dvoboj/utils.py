@@ -45,7 +45,12 @@ class MyListener(StreamListener):
             media=Twitt_media(isFoto=isFoto, isVideo=isVideo, content_url=media_url)
             media.save()
             tweet.media_data.add(media)
-        
+        if "urls" in data["entities"].keys():
+            for url_in in data["entities"]["urls"]:
+                media=Twitt_media(isURL=True, content_url=url_in["url"], display_url=url_in["display_url"])
+                media.save()
+                tweet.media_data.add(media)
+
         print data
         return True
  

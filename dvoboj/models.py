@@ -11,7 +11,9 @@ class Points(models.Model):
 class Twitt_media(models.Model):
 	isVideo = models.BooleanField(default=False)
 	isFoto = models.BooleanField(default=False)
+	isURL = models.BooleanField(default=False)
 	content_url = models.URLField(null=True, blank=True)
+	display_url = models.URLField(null=True, blank=True)
 
 	def media_type(self):
 		if self.isFoto:

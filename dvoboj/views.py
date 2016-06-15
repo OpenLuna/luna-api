@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import Points, Twitt, Twitt_media
 import json
+import re
 # Create your views here.
 def getPoints(request):
 	obj = Points.objects.all()[0]
@@ -48,7 +49,16 @@ def getTweets(request, by=0):
 									"user":tweet.user,
 									"time":tweet.timestamp.isoformat(),
 									"user_profile":"https://twitter.com/"+tweet.user,
-									"text":tweet.content,
-									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.all()],} for tweet in reversed(Twitt.objects.all().order_by("id")[int(by):int(by)+10])],
+									"text":fillUrls(tweet.content, list(tweet.media_data.filter(isURL=True))),
+									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.filter(isURL=False)],} for tweet in reversed(Twitt.objects.all().order_by("id")[int(by):int(by)+10])],
 						 "tweets_count": count,
 						})
+
+def fillUrls(text, urls):
+	p = re.compile('https?:\/\/[\w.\/-_#]*')
+	pUrl = p.finditer(text)
+	for url, sUrl in reversed(zip(pUrl, urls)):
+		start, end = url.span()
+		repText = '<a href="'+sUrl.content_url+'">'+sUrl.display_url+'</a>'
+		text = text[:start]+repText+text[end:]
+	return text
