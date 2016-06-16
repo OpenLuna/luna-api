@@ -50,7 +50,7 @@ def getTweets(request, by=0):
 									"time":tweet.timestamp.isoformat(),
 									"user_profile":"https://twitter.com/"+tweet.user,
 									"text":fillUrls(tweet.content, list(tweet.media_data.filter(isURL=True))),
-									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.filter(isURL=False)],} for tweet in reversed(Twitt.objects.all().order_by("id")[int(by):int(by)+10])],
+									"media":[{"url": media.content_url, "type":media.media_type()}for media in tweet.media_data.filter(isURL=False)],} for tweet in list(reversed(Twitt.objects.all().order_by("id")))[int(by):int(by)+10]],
 						 "tweets_count": count,
 						})
 
