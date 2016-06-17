@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .models import Points, Twitt, Twitt_media
+from .models import Points, Twitt, Twitt_media, Vote
 import json
 import re
 # Create your views here.
@@ -16,32 +16,37 @@ def getSinsPoints(request):
 	obj = Points.objects.all()[0]
 	return HttpResponse(obj.sin)
 
-def voteForOce(request):
+def voteForOce(request, source="P"):
 	obj = Points.objects.all()[0]
 	obj.oce += 1
 	obj.save()
+	Vote(option=Vote.OCE, source=source).save()
 	return HttpResponse("Added")
 
-def voteForSin(request):
+def voteForSin(request, source="P"):
 	obj = Points.objects.all()[0]
 	obj.sin += 1
 	obj.save()
+	Vote(option=Vote.SIN, source=source).save()
 	return HttpResponse("Added")
 
-def addVotesForSin(request, points):
+def addVotesForSin(request, points, source="P"):
 	obj = Points.objects.all()[0]
 	obj.sin += int(points)
 	obj.save()
+	for i in range(int(points)):
+		Vote(option=Vote.SIN, source=source).save()
 	return HttpResponse("Added")
 
-def addVotesForOce(request, points):
+def addVotesForOce(request, points, source="P"):
 	obj = Points.objects.all()[0]
 	obj.oce += int(points)
 	obj.save()
+	for i in range(int(points)):
+		Vote(option=Vote.OCE, source=source).save()
 	return HttpResponse("Added")
 
 def getTweets(request, by=0):
-	print by
 	count = Twitt.objects.all().count()
 	return JsonResponse({"tweets":[{"id":tweet.id,
 									"twitt_id":tweet.twitt_id,
