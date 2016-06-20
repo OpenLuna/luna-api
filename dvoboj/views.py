@@ -62,7 +62,14 @@ def getTweets(request, by=0):
 def fillUrls(text, urls):
 	p = re.compile('https?:\/\/[\w.\/-_#]*')
 	pUrl = p.finditer(text)
-	for url, sUrl in reversed(zip(pUrl, urls)):
+	lustUrlju = list(pUrl)
+	if len(lustUrlju)>len(urls):
+		print "wugu"
+		for blindUrl in lustUrlju[len(urls):]:
+			start, end = blindUrl.span()
+			text = text[:start]+text[end:]
+			print "removam"
+	for url, sUrl in reversed(zip(lustUrlju, urls)):
 		start, end = url.span()
 		repText = '<a href="'+sUrl.content_url+'">'+sUrl.display_url+'</a>'
 		text = text[:start]+repText+text[end:]
