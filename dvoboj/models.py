@@ -26,12 +26,10 @@ class Vote(models.Model):
     option = models.CharField(max_length=1,
                               blank=True, null=True,
                               choices=VOTE_OPTIONS)
-    source = models.CharField(max_length=1,
-                              blank=True, null=True,
-                              choices=VOTE_SOURCE,
-                              default=PAGE)
+    source = models.CharField(max_length=64,
+                              blank=True, null=True)
     def __str__(self):
-        return self.option+ " " + str(self.date)
+        return self.option + " " + str(self.date) + " " + self.source
 
 
 class Twitt_media(models.Model):
