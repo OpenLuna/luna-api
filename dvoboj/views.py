@@ -78,5 +78,7 @@ def fillUrls(text, urls):
 
 def getRandomImage(request):
 	banners = list(Banner_image.objects.all())
+	if not banners:
+		return HttpResponse("")
 	image = random.choice(banners)
 	return HttpResponse("http://localhost:8888/"+image.image.url)
