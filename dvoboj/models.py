@@ -61,3 +61,8 @@ class Twitt(models.Model):
 
     def __str__(self):
         return self.user
+
+class Banner_image(models.Model):
+    image = models.ImageField(upload_to = 'static/img/')
+    def __str__(self):
+        return self.image.name

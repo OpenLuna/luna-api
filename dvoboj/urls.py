@@ -18,4 +18,6 @@ urlpatterns = [
 
     url(r'^getTweets/(?P<by>\d+)/', getTweets),
     url(r'^getTweets/$', getTweets),
+
+    url(r'^getRandomImage/$', getRandomImage),
 ]

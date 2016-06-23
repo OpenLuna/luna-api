@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .models import Points, Twitt, Twitt_media, Vote
+from .models import Points, Twitt, Twitt_media, Vote, Banner_image
 import json
 import re
+import random
+
 # Create your views here.
 def getPoints(request):
 	obj = Points.objects.all()[0]
@@ -72,3 +74,9 @@ def fillUrls(text, urls):
 		repText = '<a href="'+sUrl.content_url+'">'+sUrl.display_url+'</a>'
 		text = text[:start]+repText+text[end:]
 	return text
+
+
+def getRandomImage(request):
+	banners = list(Banner_image.objects.all())
+	image = random.choice(banners)
+	return HttpResponse("http://localhost:8888/"+image.image.url)
