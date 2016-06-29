@@ -3,7 +3,7 @@ from tweepy import OAuthHandler
 from django.conf import settings
 from tweepy import Stream
 from tweepy.streaming import StreamListener
-from .models import Twitt, Twitt_media
+from .models import Twitt, Twitt_media, Vote
 import json
 from datetime import datetime, timedelta
 from django.db import connection
@@ -73,3 +73,11 @@ def removeRemovedTwitts():
     for twitt in Twitt.objects.all():
         if requests.get(twitt.url).status_code == 404:
             twitt.delete()
+
+
+def stats():
+    keys=list(set(Vote.objects.all().values_list("source", flat=True)))
+    outStat = dict((key,0)for key in keys)
+    for vote in Vote.objects.all():
+        outStat[vote.source]+=1
+    return outStat
